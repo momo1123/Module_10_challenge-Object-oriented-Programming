@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
+// const { stringify } = require('querystring');
 
 // TASK:
 // Your task is to build a Node.js command-line application that takes in user input to generate a logo and save it as an [SVG file](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics). The application prompts the user to select a color and shape, provide text for the logo, and save the generated SVG to a `.svg` file.
@@ -21,63 +22,115 @@ const fs = require('fs');
 // THEN I am shown a 300x200 pixel image that matches the criteria I entered
 // ###########################################################################
 
-function BlogPost(text, text_color, shape, shape_color) {
-    this.text = text;
-    this.text_color = text_color;
-    this.shape = shape;
-    this.shape_color = shape_color;
-    this.comments = [];
-    this.printMetaData = function () {
-      console.log(`Created by ${this.text} on ${this.text_color}`);
-    };
-  }
+// function BlogPost(text, text_color, shape, shape_color) {
+//     this.text = text;
+//     this.text_color = text_color;
+//     this.shape = shape;
+//     this.shape_color = shape_color;
+//     this.comments = [];
+//     this.printMetaData = function () {
+//       console.log(`Created by ${this.text} on ${this.text_color}`);
+//     };
+//   }
 
-BlogPost.prototype.addComment = function(comment){
-    this.comments.push(comment);
-}
+// BlogPost.prototype.addComment = function(comment){
+// //     this.comments.push(comment);
+// }
 const questions = [
     {
         type: 'input',
-        name: 'text',
         message: 'Enter up to 3 characters: ',
+        name: 'text',
     },
     {
         type: 'input',
-        name: 'text_color',
         message: 'Enter color of the text: ',
+        name: 'text_color',
         //Takes in color keyword OR hexadecimal number
     },
     {
         type: 'list',
-        name: 'shape',
         message: 'Choose the shape of your logo: ',
-        choices: ["circle", "rectangle", "line"],
+        choices: ['Circle',new inquirer.Separator('-----'), 'Rectangle', new inquirer.Separator('_____'), 'Line'],
+        name: 'shape',
     },
     {
         type: 'input',
+        message: 'Enter the color of your shape',
         name: 'shape_color',
-        message: 'Enter the color of your shape: ',
-        choices: ["circle", "Square", "rect", "line", "Hexicgone"],
     },
 ];
-const post = new BlogPost(
-    inquirer
+
+// const post = new BlogPost(
+inquirer
     .prompt(questions)
     .then((answers) => {
         const html = getHtml(answers);
-        fs.writeFileSync('./output/svgLogo.html', html, (err) => {
+        // console.log("This is the html output-----------",html);
+        fs.writeFile('output/logo.svg', html, (err) => {
             if (err){
-                console.log(err)
+                console.log("ERROR!! ---- ERROR!!",err);
             }else {
-                console.log("SVG fIle Sucess!!")
+                console.log("SVG fIle Sucess!!");
             }
-        })
-    })
-)
-const getHtml = (answers) => {
-    const {text, text_color, shape, shape_color } = answers
-    console.log(text, text_color, shape, shape_color);
-}
+        });
+    });
+    const getHtml = (answers) => {
+        const {text, text_color, shape, shape_color } =  answers;
+        if (text && text_color && shape === 'Circle' && shape_color){
+            console.log("returning", text);
+            return(`
+            <svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+
+            <circle cx="150" cy="100" r="80" fill="${shape_color}" />
+          
+            <text x="150" y="125" font-size="60" text-anchor="middle" fill="${text_color}">${text}</text>
+          
+          </svg>
+            `);
+
+        }
+        else if (text && text_color && shape === 'Rectangle' && shape_color){
+            console.log("returning", text);
+            return(`
+            <svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+
+            <svg width="300" height="200">
+            <rect width="300" height="200" style="fill:${shape_color};" />
+          </svg>
+          
+            <text x="150" y="125" font-size="60" text-anchor="middle" fill="${text_color}">${text}</text>
+          
+          </svg>
+            `);
+            
+        }else if (text && text_color && shape === 'Line' && shape_color){
+            console.log("returning", text);
+            return(`
+            <svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+
+            <svg width="300" height="200">
+            <rect width="300" height="200" style="fill:${shape_color};" />
+          </svg>
+          
+            <text x="150" y="125" font-size="60" text-anchor="middle" fill="${text_color}">${text}</text>
+          
+          </svg>
+            `);
+        }else{
+            return`
+            Else was true
+            YOU NEED TO RETRY!
+            `;
+        }
+        // console.log(answers);
+        // return(`
+        // ${text}
+        // ${text_color}
+        // ${shape}
+        // ${shape_color}`);
+    }
+
 
 
 
