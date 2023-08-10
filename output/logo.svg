@@ -1,11 +1,12 @@
 
             <svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">
 
-            <svg width="300" height="200">
-            <rect width="300" height="200" style="fill:#67f947;" />
-          </svg>
+            <svg height="200" width="300">
+            <polygon points="100,10 40,198 190,78 10,78 160,198"
+            style="fill:aqua;stroke:black;stroke-width:5;fill-rule:nonzero;" />
+          </svg> 
           
-            <text x="150" y="125" font-size="60" text-anchor="middle" fill="white">He#</text>
+            <text x="150" y="125" font-size="60" text-anchor="middle" fill="brown">SMU</text>
           
           </svg>
             
