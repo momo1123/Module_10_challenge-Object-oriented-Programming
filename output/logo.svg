@@ -1,6 +1,8 @@
 
 <svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">
-    <polygon points="150,0 0,300 300,240" style="fill:white;stroke:black;stroke-width:2" />
-
-<text x="150" y="125" font-size="60" text-anchor="middle" fill="red">SMU</text>
-</svg>             
+            
+<circle cx="150" cy="100" r="80" fill="white" />
+            
+<text x="150" y="125" font-size="60" text-anchor="middle" fill="white">SMU</text>
+            
+</svg>
