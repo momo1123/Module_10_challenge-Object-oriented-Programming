@@ -1,245 +1,202 @@
+const inquirer = require('inquirer');
+const fs = require('fs');
+
+// Class is is called separately
+class SvgLogo {
+    qbase() {
+        //  The return inquirer returns the functionality of the inquirere
+        // This can be same as the below if it weren't in a function
+        //  inquirer
+        // .prompt
+        return inquirer
+            .prompt([
+                {
+                    type: 'input',
+                    name: 'text',
+                    message: 'Enter up to 3 characters: ',
+                }, {
+                    type: 'input',
+                    name: 'text_color',
+                    message: 'Enter the color of the text: ',
+                },
+            ])
+
+            // The promise returns an answer in variable answers
+            .then((answers) => {
+                const { text, text_color } = answers;
+                newCircle.run(text, text_color);
+                newTriangle.run(text,text_color);
+            })
+            .then(() => {
+                return inquirer
+                .prompt([
+                    {
+                        type: 'list',
+                        message: 'Choose the shape of your logo: ',
+                        choices: ['Circle', new inquirer.Separator('-----'), 'Triangle', new inquirer.Separator('_____'), 'Line', new inquirer.Separator('*****'), 'Polygon'],
+                        name: 'shape',
+                    },
+                    {
+                        type: 'input',
+                        message: 'Enter the color of your shape',
+                        name: 'shape_color',
+                    },
+                ])
+
+            })
+    }
+
+}
 
 
-// // The following example test should pass:
 
-// // ```js
-// // const shape = new Triangle();
-// // shape.setColor("blue");
-// // expect(shape.render()).toEqual('<polygon points="150, 18 244, 182 56, 182" fill="blue" />');
-// // ```
+// creating new class called triangle
+class Circle extends SvgLogo {
+    run(text, text_color) {
+        return inquirer
+            .prompt([
+                {
+                    type: 'list',
+                    message: 'Choose the shape of your logo: ',
+                    choices: ['Circle', new inquirer.Separator('-----'), 'Triangle', new inquirer.Separator('_____'), 'Line', new inquirer.Separator('*****'), 'Polygon'],
+                    name: 'shape',
+                },
+                {
+                    type: 'input',
+                    message: 'Enter the color of your shape',
+                    name: 'shape_color',
+                },
+            ])
+            .then((answers) => {
+                const { shape, shape_color } = answers
+                newTriangle.run(shape,shape_color,text,text_color)
+                const newText = (shape, shape_color, text, text_color) => {
+                    // return (`${shape} ---- ${shape_color}`)
+                    //                     return (
+                    return (`
+<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">
 
-// // ├── examples/           // Example svg file(s) created with the app
-// // ├── lib/                // Folder for classes or functions
-// //     ├── shapes.js       // Exports `Triangle`, `Circle`, and `Square` classes
-// //     ├── shapes.test.js  // Jest tests for shapes
-// //     └── more...         // Additional files and tests
-// // ├── .gitignore          // Indicates which folders and files Git should ignore
-// // ├── index.js            // Runs the application using imports from lib/
-// // ├── package.json
-// // └── README.md           // App description, link to video, setup and usage instructions  
+<${shape.toLowerCase()} cx="150" cy="100" r="80" fill="${shape_color.toLowerCase()}" />
 
-// // TASK:
-// // Your task is to build a Node.js command-line application that takes in user input to generate a logo and save it as an [SVG file](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics). The application prompts the user to select a color and shape, provide text for the logo, and save the generated SVG to a `.svg` file.
+<text x="150" y="125" font-size="60" text-anchor="middle" fill="${text_color.toLowerCase()}">${text}</text>
 
-// // Acceptence Criteria:
-// // GIVEN a command-line application that accepts user input - DONE
-// // WHEN I am prompted for text - DONE
-// // THEN I can enter up to three characters - DONE
-// // WHEN I am prompted for the text color - DONE
-// // THEN I can enter a color keyword (OR a hexadecimal number) - DONE
-// // WHEN I am prompted for a shape - DONE
-// // THEN I am presented with a list of shapes to choose from: circle, triangle,  and square - DONE
-// // WHEN I am prompted for the shape's color - DONE
-// // THEN I can enter a color keyword (OR a hexadecimal number) - DONE
-// // WHEN I have entered input for all the prompts - DONE
-// // THEN an SVG file is created named `logo.svg` - DONE
-// // AND the output text "Generated logo.svg" is printed in the command line
-// // WHEN I open the `logo.svg` file in a browser
-// // THEN I am shown a 300x200 pixel image that matches the criteria I entered
-// // ###########################################################################
-
-// const inquirer = require('inquirer');
-// const fs = require('fs');
-// const Questions = require('./lib/shapes.js');
+</svg>`)
+                }
+                if (shape === "Triangle"){
+                    fs.writeFile('./output/logo.svg',newTriangle.run(shape,shape_color,text,text_color), (err) => {
+                        if (err) {
+                            console.log("---ERROR--- \n", (err));
+                        } else {
+                            console.log("SVG Triangle created");
+                        }
+                    })
 
 
-// const questions = [
-//     {
-//         type: 'input',
-//         message: 'Enter up to 3 characters: ',
-//         name: 'text',
-//     },
-//     {
-//         type: 'input',
-//         message: 'Enter color of the text: ',
-//         name: 'text_color',
-//         //Takes in color keyword OR hexadecimal number
-//     },
-//     {
-//         type: 'list',
-//         message: 'Choose the shape of your logo: ',
-//         choices: ['Circle', new inquirer.Separator('-----'), 'Rectangle', new inquirer.Separator('_____'), 'Line', new inquirer.Separator('*****'), 'Polygon'],
-//         name: 'shape',
-//     },
-//     {
-//         type: 'input',
-//         message: 'Enter the color of your shape',
-//         name: 'shape_color',
-//     },
-// ];
+                }else if (shape === "Circle"){
+                    fs.writeFile('./output/logo.svg',newCircle.run(shape,shape_color,text,text_color), (err) => {
+                        if (err) {
+                            console.log("---ERROR--- \n", (err));
+                        } else {
+                            console.log("SVG Triangle created");
+                        }
+                    })
+                }
+                else {
+                    fs.writeFile('./output/logo.svg', '!!NOTHING WAS WRITTEN!!', (err) => {
+                        if (err) {
+                            console.log("---ERROR--- \n", (err));
+                        } else {
+                            console.log("Success!!");
+                        }
+                    })
 
-// // const post = new BlogPost(
-// run(){
-// return inquirer
-//     .prompt(questions)
-//     .then((answers) => {
-//         const html = getHtml(answers);
-//         // console.log("This is the html output-----------",html);
-//         fs.writeFile('output/logo.svg', html, (err) => {
-//             if (err) {
-//                 console.log("ERROR!! ---- ERROR!!", err);
-//             } else {
-//                 console.log("SVG fIle Sucess!!");
-//             }
+                }
+                // console.log(newText(shape, shape_color))
+                
+            })
+    }
+}
+
+class Triangle extends Circle {
+    run(shape,shape_color,text,text_color){
+        if (shape === 'Triangle' && shape_color){
+            shape = 'polygon';
+            return (`
+<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+    <${shape} points="150,0 0,300 300,240" style="fill:${shape_color};stroke:black;stroke-width:2" />
+
+<text x="150" y="125" font-size="60" text-anchor="middle" fill="${text_color.toLowerCase()}">${text}</text>
+</svg>             `)
+
+        }
+    }
+
+}
+
+class TempCircle extends SvgLogo {
+    run(shape,shape_color,text,text_color){
+        if (shape === 'Circle' && shape_color){
+            shape = 'circle';
+            return (`
+<svg version="1.1" width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+            
+<${shape} cx="150" cy="100" r="80" fill="${shape_color}" />
+            
+<text x="150" y="125" font-size="60" text-anchor="middle" fill="${text_color}">${text}</text>
+            
+</svg>`)
+
+        }
+    }
+
+}
+// declaring new class
+const newCircle = new Circle;
+const newTriangle = new Triangle;
+
+// Calling the class
+const newSvgLogo = new SvgLogo;
+newSvgLogo.qbase()
+
+
+
+
+// Recieved from ASK BCS
+// #########################################################
+
+
+// class SvgLogo {
+//     qbase() {
+//         // ... existing code ...
+
+//         .then((answers) => {
+//             const { text, text_color } = answers;
+
+//             // ... existing code ...
+
+//             fs.writeFile('./output/logo.svg', newText(text, text_color), (err) => {
+//                 if (err) {
+//                     console.log("---ERROR--- \n", (err));
+//                 } else {
+//                     console.log("First prompt Success!!!");
+//                 }
+//             });
+
+//             // Pass the input values to the Circle class
+//             newCircle.run(text, text_color); // Pass the text and text_color to Circle's run method
 //         });
-//     })
-//     .catch((err) => {
-//         console.log(err);
-//         console.log("Opps, something went wrong")
 //     }
-//     )
+// }
 
-// const getHtml = (answers) => {
-//     const { text, text_color, shape, shape_color } = answers;
-//     // New Classes test
-//     class Shape {
-//         constructor(text, text_color) {
-//             this.text = text;
-//             this.text_color = text_color;
-//         }
+// class Circle extends SvgLogo {
+//     run(text, text_color) { // Accept text and text_color as parameters
+//         // ... existing code ...
 //     }
-//     // console.log('newShape \n',newShape);
+// }
 
-//     class Circle extends Shape {
-//         constructor(text, text_color, shape, shape_color) {
-//             super(text, text_color);
-//             this.text = text
-//             this.text_color = text_color;
-//             this.shape = shape
-//             this.shape_color = shape_color;
-//         }
-//     }
-//     const newCircle = new Circle(
-//         text,
-//         text_color,
-//         shape,
-//         shape_color
-//     );
+// const newCircle = new Circle();
+// const newSvgLogo = new SvgLogo();
+// newSvgLogo.qbase();
 
-//     // console.log('newCircle \n',newCircle);
-//     class Triangle extends Shape {
-//         constructor(text, text_color, shape, shape_color) {
-//             super(text, text_color);
-//             this.text = text
-//             this.text_color = text_color;
-//             this.shape = shape;
-//             this.shape_color = shape_color;
-//         }
-//     }
-//     const newTriangle = new Triangle(
-//         text,
-//         text_color,
-//         shape,
-//         shape_color
-//     );
-//     // console.log('newTriangle \n',newTriangle);
-//     class Square extends Shape {
-//         constructor(text, text_color, shape, shape_color) {
-//             super(text, text_color);
-//             this.text = text
-//             this.text_color = text_color;
-//             this.shape = shape;
-//             this.shape_color = shape_color;
-//         }
-//     }
 
-//     const newSquare = new Square(
-//         text,
-//         text_color,
-//         shape,
-//         shape_color
-//     );
-//     function ifCircle(shape) {
-//         if (shape === 'Circle'){
-//             return (`Value of ifCircle ----- ${newCircle}`);
-
-//         }
-//     }
-//     return (`
-// ${newSquare.text}
-// ${newSquare.text_color}
-// ${newSquare.shape}
-// ${newSquare.shape_color}
-// ${ifCircle('Circle')}
-//     `);
-
-// }}
-// run()
-
-// //     // Classes##
-// //     class Shape {
-// //         constructor(text, text_color) {
-// //             this.text = text;
-// //             this.text_color = text_color;
-// //         }
-// //     }
-// //     // console.log('newShape \n',newShape);
-
-// //     class Circle extends Shape {
-// //         constructor(text, text_color, shape, shape_color) {
-// //             super(text, text_color);
-// //             this.text = text
-// //             this.text_color = text_color;
-// //             this.shape = [shape]
-// //             this.shape_color = shape_color;
-// //         }
-// //     }
-// //     const newCircle = new Circle(
-// //         text,
-// //         text_color,
-// //         shape,
-// //         shape_color
-// //     );
-
-// //     // console.log('newCircle \n',newCircle);
-// //     class Triangle extends Shape {
-// //         constructor(text, text_color, shape, shape_color) {
-// //             super(text, text_color);
-// //             this.text = text
-// //             this.text_color = text_color;
-// //             this.shape = shape;
-// //             this.shape_color = shape_color;
-// //         }
-// //     }
-// //     const newTriangle = new Triangle(
-// //         text,
-// //         text_color,
-// //         shape,
-// //         shape_color
-// //     );
-// //     // console.log('newTriangle \n',newTriangle);
-// //     class Square extends Shape {
-// //         constructor(text, text_color, shape, shape_color) {
-// //             super(text, text_color);
-// //             this.text = text
-// //             this.text_color = text_color;
-// //             this.shape = shape;
-// //             this.shape_color = shape_color;
-// //         }
-// //     }
-
-// //     const newSquare = new Square(
-// //         text,
-// //         text_color,
-// //         shape,
-// //         shape_color
-// //     );
-// //     if (shape === 'Circle') {
-// //         return (
-// //             `
-// // ${newCircle.text}
-// // ${newCircle.text_color}
-// // ${newCircle.shape}
-// // ${newCircle.shape_color}
-
-// //             `
-// //         );
-
-// //     } else
-// //         return (
-// //             `
-// // If statement was not passed
-
-// //             `
-// //         );
-// // }
+// #########################################################
